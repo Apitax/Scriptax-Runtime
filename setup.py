@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name='scriptax-runtime',
     packages=find_packages(),
-    version='0.0.4',
+    version='0.1.0',
     description='Scriptax is a powerful driver for the Apitax framework which exposes an automation first language used to quickly script together automation.',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -28,6 +28,7 @@ setup(
     entry_points={
         'console_scripts': [
             'scriptax=scriptax_runtime.scriptax.cli:scriptax',  # command=package.module:function
+            'spm=scriptax_runtime.scriptax.spm:spm',  # command=package.module:function
         ],
     },
 )
