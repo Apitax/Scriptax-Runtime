@@ -10,11 +10,16 @@ from typing import Tuple
 from scriptax.parser.Visitor import AhVisitor
 from scriptax_runtime.ScriptaxDriver import ScriptaxDriver
 
+import time
+
 State.log = Log(StandardLog(), logColorize=False)
 State.log.log("")
 
 
-def execute(file: str, debug: bool = False) -> Tuple[BlockStatus, AhVisitor]:
+def execute(file: str, debug: bool = False) -> Tuple[BlockStatus, AhVisitor, float]:
     Drivers.add("scriptax", ScriptaxDriver(path=file))
     LoadedDrivers.load("scriptax")
-    return customizable_parser(read_file(file), file=file, options=Options(debug=debug))
+    start_time = time.process_time()
+    block_status, ahvisitor = customizable_parser(read_file(file), file=file, options=Options(debug=debug))
+    total_time = time.process_time() - start_time
+    return block_status, ahvisitor, total_time

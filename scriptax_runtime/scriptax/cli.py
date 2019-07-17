@@ -15,17 +15,15 @@ def scriptax(ctx, **kwargs):
     if ctx.invoked_subcommand is None:
         print("Executing file: " + kwargs['file'])
         print()
-        start_time = 0
-        total_time = 0
-        if kwargs['benchmark']:
-            start_time = time.process_time()
-        block_status, visitor = execute(file=kwargs['file'], debug=kwargs['debug'])
-        if kwargs['benchmark']:
-            total_time = time.process_time() - start_time
+
+        block_status, visitor, total_time = execute(file=kwargs['file'], debug=kwargs['debug'])
+
         print("RESULT: " + str(block_status.result))
+
         if kwargs['benchmark']:
             print()
             print("Benchmark: " + str(total_time) + " seconds.")
+            print()
 
 
 @scriptax.command()
