@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setup(
     name='scriptax-runtime',
     packages=find_packages(),
-    version='0.0.1',
+    version='0.0.3',
     description='Scriptax is a powerful driver for the Apitax framework which exposes an automation first language used to quickly script together automation.',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -20,7 +20,7 @@ setup(
         "Operating System :: OS Independent",
     ),
     install_requires=[
-        'scriptax==4.0.0',
+        'scriptax==4.0.1',
         'apitaxcore==3.0.9',
         'click',
         'pytest'
