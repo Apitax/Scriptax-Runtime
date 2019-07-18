@@ -1,6 +1,8 @@
 import click
 from pathlib import Path
 import json
+import subprocess
+import sys
 
 CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
@@ -24,7 +26,8 @@ def spm():
 @spm.command()
 @click.argument('package')
 @click.argument('driver', required=False)
-def install(driver=None, **kwargs):
+@click.option('--version', required=False)
+def install(driver=None, version=None, **kwargs):
     package = kwargs['package']
     make_file_if_not_exist()
     with open(drivers_path, 'r') as file:
@@ -35,6 +38,18 @@ def install(driver=None, **kwargs):
     if not driver and package in data:
         print("Error: " + package + " already installed.")
         return
+    if package not in data:
+        if version:
+            click.confirm("This action will attempt to install `" + package + version + "` using pip. Continue?", default=True, abort=True)
+            if subprocess.call([sys.executable, "-m", "pip", "install", package + version]) == 1:
+                print(package + " not installed.")
+                return
+        else:
+            click.confirm("This action will attempt to install `" + package + "` using pip. Continue?", default=True, abort=True)
+            if subprocess.call([sys.executable, "-m", "pip", "install", package]) == 1:
+                print(package + " not installed.")
+                return
+        print()
     if not driver:
         data[package] = {'drivers': []}
     else:
@@ -50,7 +65,8 @@ def install(driver=None, **kwargs):
 @spm.command()
 @click.argument('package')
 @click.argument('driver', required=False)
-def uninstall(driver=None, **kwargs):
+@click.option('--force', is_flag=True)
+def uninstall(driver=None, force=None, **kwargs):
     package = kwargs['package']
     make_file_if_not_exist()
     with open(drivers_path, 'r') as file:
@@ -62,6 +78,10 @@ def uninstall(driver=None, **kwargs):
         print("Error: " + package + " not installed.")
         return
     if not driver:
+        if force:
+            click.confirm("This action will attempt to uninstall `" + package + "` using pip. Continue?", default=True,
+                          abort=True)
+            subprocess.call([sys.executable, "-m", "pip", "uninstall", package])
         data.pop(package, None)
     else:
         data[package]['drivers'].remove(driver)
